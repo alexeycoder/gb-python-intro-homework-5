@@ -8,7 +8,7 @@
 
 *Результат работы программы:*
 
-
+![task1-example](https://user-images.githubusercontent.com/109767480/194952739-4a56e2e5-0a7e-4592-af91-ef9ae049449a.png)
 
 ### Задача 2
 
@@ -21,7 +21,9 @@
 
 *Результат работы программы:*
 
+![task2-example-1](https://user-images.githubusercontent.com/109767480/194952767-92a7570a-627f-4f73-a050-e5609dd2e77e.png)
 
+![task2-example-2](https://user-images.githubusercontent.com/109767480/194952777-348d9589-8253-4159-9447-a8bebf90a987.png)
 
 ### Задача 3
 
@@ -29,7 +31,9 @@
 
 *Результат работы программы:*
 
+(видео .webm - в некоторых браузерах может не проигрываться автоматически)
 
+[task3-example.webm](https://user-images.githubusercontent.com/109767480/194952793-c767ded8-b435-4259-874c-a2fe3b56f9c3.webm)
 
 ### Задача 4
 
@@ -39,4 +43,7 @@
 
 *Результат работы программы:*
 
+![task4-example-1](https://user-images.githubusercontent.com/109767480/194952945-ace2c09d-8eab-4daa-b4e2-48dbeff2f83c.png)
+
+![task4-example-2](https://user-images.githubusercontent.com/109767480/194952956-9f9f833a-2146-4bfb-a341-4e585bab3d46.png)
 
