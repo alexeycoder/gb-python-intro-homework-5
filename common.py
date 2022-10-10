@@ -309,13 +309,16 @@ def is_out_of_range(value, min_allowed, max_allowed):
     return ((min_allowed is not None) and value < min_allowed) or ((max_allowed is not None) and value > max_allowed)
 
 
-def get_user_input_int_range(prompt: str, min_allowed: int = None, max_allowed: int = None) -> int:
+def get_user_input_int_range(prompt: str, min_allowed: int = None, max_allowed: int = None, center=False) -> int:
+    if center:
+        if center:
+            prompt = Console.format(prompt, center=True)
     not_a_number = False
     out_of_range = False
     while True:
         if not_a_number:
             not_a_number = False
-            print_error(ERROR_NOT_INT)
+            print_error(ERROR_NOT_INT, center)
         if out_of_range:
             out_of_range = False
             error_out_of_range = ''
@@ -325,7 +328,7 @@ def get_user_input_int_range(prompt: str, min_allowed: int = None, max_allowed: 
                 error_out_of_range = f'Число не должно быть меньше {min_allowed}! {PLEASE_REPEAT}'
             else:
                 error_out_of_range = f'Число не должно быть больше {max_allowed}! {PLEASE_REPEAT}'
-            print_error(error_out_of_range)
+            print_error(error_out_of_range, center)
 
         try:
             num = int(input(prompt))

@@ -46,6 +46,11 @@ class TableSymb:
     CROSS = '\u256c'
 
 
+class DifficultyLevel(Enum):
+    EASY = 0
+    HARD = 1
+
+
 class GameDesk:
     X_NAME = ' крестики '
     O_NAME = ' нолики '
@@ -54,7 +59,7 @@ class GameDesk:
     __CELL_PADDING = 3
     __WANR_INCORRECT_CELL_NUM = 'Некорректный ввод: Требуется ввести номер свободной ячейки игрового поля! ' + common.PLEASE_REPEAT
 
-    def __init__(self, dimension) -> None:
+    def __init__(self, dimension: int, difficulty: DifficultyLevel) -> None:
         self.gameover = False
         self.winner = CellState.EMPTY.value
         self.__winner_indices = []
@@ -64,6 +69,7 @@ class GameDesk:
         self.winners_back_colors = WINNERS_BACK_COLORS
         self.whose_turn = CellState.X.value
         self.human = CellState.X.value
+        self.difficulty_level = difficulty
 
         self._dim = max(dimension, 2)
         self.__desk = [CellState.EMPTY for _ in range(dimension * dimension)]
@@ -190,7 +196,7 @@ class GameDesk:
             do_margin()
             print(bottom_frame)
 
-    def render(self, center=False):
+    def __render(self, center=False):
 
         self.__render_gamers_state(self.whose_turn)
 
@@ -222,6 +228,24 @@ class GameDesk:
         Con.move_cursor(0, -4)
         Con.clear_below_cursor()
 
+    def __find_optimum_cell_index(self, opponent_cell_state: CellState):
+        max_filled_cells_by_opponent = 0
+        max_filled_cells_indexes = None
+        for scanline in self.__scanlines:
+            scanline_cells_values = [self.__desk[idx] for idx in scanline]
+            empty_count = scanline_cells_values.count(CellState.EMPTY)
+            if empty_count > 0:
+                i_count = scanline_cells_values.count(opponent_cell_state)
+                if i_count > max_filled_cells_by_opponent:
+                    max_filled_cells_by_opponent = i_count
+                    max_filled_cells_indexes = scanline
+        if max_filled_cells_indexes is None:
+            return None
+
+        for i in max_filled_cells_indexes:
+            if self.__desk[i] == CellState.EMPTY:
+                return i
+
     def __go_turn(self):
         # определяем чей ход:
         human = self.human
@@ -246,10 +270,16 @@ class GameDesk:
         else:
             # логика ии-игрока:
             rnd_idx = random.choice(empty_cell_indexes)
+            if self.difficulty_level == DifficultyLevel.HARD:
+                idx_optimum = self.__find_optimum_cell_index(
+                    CellState(opponent))
+                if idx_optimum is not None:
+                    rnd_idx = idx_optimum
+
             self.__desk[rnd_idx] = gamer_mark
 
             self.__clear_game_screen()
-            self.render(center=True)
+            self.__render(center=True)
             common.print_centered(
                 f'Ход ИИ: {GameDesk.__cell_name_by_index(rnd_idx)}.')
             time.sleep(0.5)
@@ -287,11 +317,11 @@ class GameDesk:
     def run(self):
         while not self.gameover:
             self.__clear_game_screen()
-            self.render(center=True)
+            self.__render(center=True)
             self.__go_turn()
             self.__check_for_winner()
             self.__clear_game_screen()
-            self.render(center=True)
+            self.__render(center=True)
 
         self.__congratulations()
 
@@ -328,10 +358,14 @@ while(user_answer):
                                          WARN_OUT_OF_RANGE,
                                          lambda a: a > 1,
                                          center=True)
+
+    dif_lvl = common.get_user_input_int_range('Задайте уровень сложности: '
+                                              '\n\t0 \u2014 лёгкий,\n\t1 \u2014 сложный\n?: ',
+                                              0, 1, center=True)
     Con.restore_cursor_pos()
     Con.clear_below_cursor()
 
-    game = GameDesk(cust_dim)
+    game = GameDesk(cust_dim, DifficultyLevel(dif_lvl))
     game.toss_who_human(20)
     game.run()
 
@@ -343,6 +377,6 @@ while(user_answer):
     #     print(winner_info[0])
     #     print(winner_info[1])
 
-    # game.render(center=True)
+    # game.__render(center=True)
 
     user_answer = common.ask_for_repeat(center=True)
