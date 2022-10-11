@@ -86,15 +86,19 @@ class GameDesk:
         self.__con_pos_stored = False
 
     def __check_for_winner(self):
+        noone_can_win = True
         for scanline in self.__scanlines:
             states = {self.__desk[idx] for idx in scanline}
+            if len(states - {CellState.EMPTY}) != 2:
+                noone_can_win = False
             if len(states) == 1 and states != {CellState.EMPTY}:
                 self.__winner_indices = scanline
                 self.gameover = True
                 self.winner = list(states)[0].value
                 return
                 # return (winner, scanline)
-        if self.__desk.count(CellState.EMPTY) == 0:
+
+        if noone_can_win or self.__desk.count(CellState.EMPTY) == 0:
             self.gameover = True
             self.winner = CellState.EMPTY.value
             # return (winner, None)
@@ -283,7 +287,8 @@ class GameDesk:
             common.print_centered(
                 f'Ход ИИ: {GameDesk.__cell_name_by_index(rnd_idx)}.')
             time.sleep(0.5)
-            if len(empty_cell_indexes) > 1:  # делаем паузу-ввод только если ячейки ещё не кончились
+            self.__check_for_winner()
+            if not self.gameover:  # делаем паузу-ввод только если ячейки ещё не кончились
                 common.print_centered(
                     'Нажмите Enter чтобы продолжить...', end='')
                 input()
