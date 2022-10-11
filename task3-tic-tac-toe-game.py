@@ -57,7 +57,7 @@ class GameDesk:
     X_SYMBOL = 'X'
     O_SYMBOL = 'O'
     __CELL_PADDING = 3
-    __WANR_INCORRECT_CELL_NUM = 'Некорректный ввод: Требуется ввести номер свободной ячейки игрового поля! ' + common.PLEASE_REPEAT
+    __WARN_INCORRECT_CELL_NUM = 'Некорректный ввод: Требуется ввести номер свободной ячейки игрового поля! ' + common.PLEASE_REPEAT
 
     def __init__(self, dimension: int, difficulty: DifficultyLevel) -> None:
         self.gameover = False
@@ -265,7 +265,7 @@ class GameDesk:
             # логика для человека:
             cell_number = common.get_user_input_int(
                 'Ваш ход: ',
-                GameDesk.__WANR_INCORRECT_CELL_NUM,
+                GameDesk.__WARN_INCORRECT_CELL_NUM,
                 lambda n: (n-1) in empty_cell_indexes,
                 center=True)
 
@@ -288,7 +288,7 @@ class GameDesk:
                 f'Ход ИИ: {GameDesk.__cell_name_by_index(rnd_idx)}.')
             time.sleep(0.5)
             self.__check_for_winner()
-            if not self.gameover:  # делаем паузу-ввод только если ячейки ещё не кончились
+            if not self.gameover:  # делаем паузу-ввод только если не game over
                 common.print_centered(
                     'Нажмите Enter чтобы продолжить...', end='')
                 input()
