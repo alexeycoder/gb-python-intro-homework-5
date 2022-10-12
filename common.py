@@ -13,49 +13,50 @@ ERROR_NOT_FLOAT = 'Некорректный ввод: Требуется вещ�
 
 
 class escape_codes:
-    CLEAR = '\033[1;1H\033[2J'
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
-    ITALIC = '\033[3m'      # курсив, может не работать, в ubuntu ok
-    UNDERLINE = '\033[4m'
-    BLINK = '\033[5m'
-    RAPID_BLINK = '\033[6m'
+    _CSI = '\033['
+    CLEAR = _CSI + '1;1H' + _CSI + '2J'
+    RESET = _CSI + '0m'
+    BOLD = _CSI + '1m'
+    ITALIC = _CSI + '3m'      # курсив, может не работать, в ubuntu ok
+    UNDERLINE = _CSI + '4m'
+    BLINK = _CSI + '5m'
+    RAPID_BLINK = _CSI + '6m'
 
-    FG_BLACK = '\033[30m'
-    FG_RED = '\033[31m'
-    FG_GREEN = '\033[32m'
-    FG_YELLOW = '\033[33m'
-    FG_BLUE = '\033[34m'
-    FG_MAGENTA = '\033[35m'
-    FG_CYAN = '\033[36m'
-    FG_WHITE = '\033[37m'
-    FG_GRAY = '\033[90m'
-    FG_BRIGHT_RED = '\033[91m'
-    FG_BRIGHT_GREEN = '\033[92m'
-    FG_BRIGHT_YELLOW = '\033[93m'
-    FG_BRIGHT_BLUE = '\033[94m'
-    FG_BRIGHT_MAGENTA = '\033[95m'
-    FG_BRIGHT_CYAN = '\033[96m'
-    FG_BRIGHT_WHITE = '\033[97m'
+    FG_BLACK = _CSI + '30m'
+    FG_RED = _CSI + '31m'
+    FG_GREEN = _CSI + '32m'
+    FG_YELLOW = _CSI + '33m'
+    FG_BLUE = _CSI + '34m'
+    FG_MAGENTA = _CSI + '35m'
+    FG_CYAN = _CSI + '36m'
+    FG_WHITE = _CSI + '37m'
+    FG_GRAY = _CSI + '90m'
+    FG_BRIGHT_RED = _CSI + '91m'
+    FG_BRIGHT_GREEN = _CSI + '92m'
+    FG_BRIGHT_YELLOW = _CSI + '93m'
+    FG_BRIGHT_BLUE = _CSI + '94m'
+    FG_BRIGHT_MAGENTA = _CSI + '95m'
+    FG_BRIGHT_CYAN = _CSI + '96m'
+    FG_BRIGHT_WHITE = _CSI + '97m'
 
-    BG_BLACK = '\033[40m'
-    BG_RED = '\033[41m'
-    BG_GREEN = '\033[42m'
-    BG_YELLOW = '\033[43m'
-    BG_BLUE = '\033[44m'
-    BG_MAGENTA = '\033[45m'
-    BG_CYAN = '\033[46m'
-    BG_WHITE = '\033[47m'
-    BG_GRAY = '\033[100m'
-    BG_BRIGHT_RED = '\033[101m'
-    BG_BRIGHT_GREEN = '\033[102m'
-    BG_BRIGHT_YELLOW = '\033[103m'
-    BG_BRIGHT_BLUE = '\033[104m'
-    BG_BRIGHT_MAGENTA = '\033[105m'
-    BG_BRIGHT_CYAN = '\033[106m'
-    BG_BRIGHT_WHITE = '\033[107m'
+    BG_BLACK = _CSI + '40m'
+    BG_RED = _CSI + '41m'
+    BG_GREEN = _CSI + '42m'
+    BG_YELLOW = _CSI + '43m'
+    BG_BLUE = _CSI + '44m'
+    BG_MAGENTA = _CSI + '45m'
+    BG_CYAN = _CSI + '46m'
+    BG_WHITE = _CSI + '47m'
+    BG_GRAY = _CSI + '100m'
+    BG_BRIGHT_RED = _CSI + '101m'
+    BG_BRIGHT_GREEN = _CSI + '102m'
+    BG_BRIGHT_YELLOW = _CSI + '103m'
+    BG_BRIGHT_BLUE = _CSI + '104m'
+    BG_BRIGHT_MAGENTA = _CSI + '105m'
+    BG_BRIGHT_CYAN = _CSI + '106m'
+    BG_BRIGHT_WHITE = _CSI + '107m'
 
-    BG_DARK_PURPLE = '\033[48;5;90m'
+    BG_DARK_PURPLE = _CSI + '48;5;90m'
 
 
 class ForeColor(Enum):
@@ -122,32 +123,32 @@ class Console:
 
     @staticmethod
     def clear_screen():
-        sys.stdout.write('\033[2J')
+        sys.stdout.write(escape_codes._CSI + '2J')
         sys.stdout.flush()
 
     @staticmethod
     def clear_below_cursor():
-        sys.stdout.write('\033[0J')
+        sys.stdout.write(escape_codes._CSI + '0J')
         sys.stdout.flush()
 
     @staticmethod
     def clear_above_cursor():
-        sys.stdout.write('\033[1J')
+        sys.stdout.write(escape_codes._CSI + '1J')
         sys.stdout.flush()
 
     @staticmethod
     def clear_line():
-        sys.stdout.write('\033[2K')
+        sys.stdout.write(escape_codes._CSI + '2K')
         sys.stdout.flush()
 
     @staticmethod
     def clear_line_after_cursor():
-        sys.stdout.write('\033[0K')
+        sys.stdout.write(escape_codes._CSI + '0K')
         sys.stdout.flush()
 
     @staticmethod
     def clear_line_before_cursor():
-        sys.stdout.write('\033[1K')
+        sys.stdout.write(escape_codes._CSI + '1K')
         sys.stdout.flush()
 
     @staticmethod
@@ -174,12 +175,12 @@ class Console:
 
     @staticmethod
     def store_cursor_pos():
-        sys.stdout.write('\033[s')
+        sys.stdout.write(escape_codes._CSI + 's')
         sys.stdout.flush()
 
     @staticmethod
     def restore_cursor_pos():
-        sys.stdout.write('\033[u')
+        sys.stdout.write(escape_codes._CSI + 'u')
         sys.stdout.flush()
 
     @staticmethod
@@ -192,14 +193,14 @@ class Console:
         command_str = ''
         if horizontal_shift != 0:
             if horizontal_shift < 0:  # left
-                command_str = f'\033[{-horizontal_shift}D'
+                command_str = f'{escape_codes._CSI}{-horizontal_shift}D'
             else:  # right
-                command_str = f'\033[{horizontal_shift}C'
+                command_str = f'{escape_codes._CSI}{horizontal_shift}C'
         if vertical_shift != 0:
             if vertical_shift < 0:  # up
-                command_str += f'\033[{-vertical_shift}A'
+                command_str += f'{escape_codes._CSI}{-vertical_shift}A'
             else:  # down
-                command_str += f'\033[{vertical_shift}B'
+                command_str += f'{escape_codes._CSI}{vertical_shift}B'
         return command_str
 
     @staticmethod
@@ -226,7 +227,7 @@ class Console:
 
     @staticmethod
     def __command_set_cursor_pos(column=0, row=0):
-        return f'\033[{row};{column}H'
+        return f'{escape_codes._CSI}{row};{column}H'
 
     @staticmethod
     def set_cursor_pos(column=0, row=0):
